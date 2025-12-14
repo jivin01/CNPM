@@ -1,47 +1,4 @@
-Hệ thống đào tạo trực tuyến
 
-[012012210523] - Công nghệ phần mềm - 7480201390613
-Khóa học của tôi
- 
-[TT]_HKI2025-2026_Công nghệ phần mềm_012012210523
- 
-Elearning UTH
- 
-Đăng ký nhóm
-Hệ thống đào tạo trực tuyến
-Các khối
-Bỏ qua đến nội dung chính
-
-Bài tập
-Đăng ký nhóm
-Các khối
-Yêu cầu hoàn thành
-Opened: Monday, 1 December 2025, 7:01 AM
-Due: Monday, 1 December 2025, 8:01 AM
-Đại diện nhóm trưởng (5-7 sv)
-
-Thông tin thành viên (Họ tên, email, mssv)
-
-Cập nhật link git của dự án nhóm (để ở chế độ public)
-
-Link doc 
-
-Trạng thái bài nộp
-Trạng thái bài nộp	Đã nộp để chấm điểm
-Trạng thái chấm điểm	Đã cho điểm
-Thời gian còn lại	Bài tập đã được gửi sớm 21 phút 48 giây
-Chỉnh sửa lần cuối	Monday, 1 December 2025, 7:39 AM
-Văn bản trực tuyến	
-(37 từ)
-Nguyễn Hữu Vinh : vinhnh1855@ut.edu.vn : 080206001855
-
-Trần Hoàng Thiên Chương : chuongtht5407@ut.edu.vn : 072206005407
-
-Nguyễn Mạnh Hùng...
-
-Đăng tải các bình luận.	
-Nhận xét (1)
-NCNguyễn Văn Chiến - Mon, 1 Dec 2025, 7:41 AM
 ● English: System for Retinal Vascular Health Screening
 ● Vietnamese: Hệ Thống Sàng Lọc Sức Khỏe Mạch Máu Võng Mạc
 ● Abbreviation: SP26SE025
