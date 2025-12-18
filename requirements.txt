@@ -7,3 +7,7 @@ cloudinary
 pydantic
 python-dotenv
 numpy
+streamlit
+pandas
+Pillow
+plotly
