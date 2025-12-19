@@ -1,5 +1,8 @@
+from sqlmodel import SQLModel  # <--- QUAN TRỌNG: Phải có dòng này mới hết lỗi NameError
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+
+# === PHẦN 1: USER & AUTH (Code cũ của bạn) ===
 
 # Khuôn mẫu Token
 class Token(BaseModel):
@@ -34,3 +37,27 @@ class UserOut(BaseModel):
 class UserUpdate(BaseModel):
     is_active: Optional[bool] = None
     role: Optional[str] = None
+
+
+# === PHẦN 2: PATIENT (Bắt buộc phải thêm để chạy được main.py) ===
+
+class PatientCreate(SQLModel):
+    full_name: str
+    gender: str
+    birth_year: int
+    phone: str
+    address: Optional[str] = None
+    medical_history: Optional[str] = None
+
+class PatientOut(PatientCreate):
+    id: int
+class PatientCreate(SQLModel):
+    full_name: str
+    gender: str
+    birth_year: int
+    phone: str
+    address: Optional[str] = None
+    medical_history: Optional[str] = None
+
+class PatientOut(PatientCreate):
+    id: int

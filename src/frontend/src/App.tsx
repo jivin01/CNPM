@@ -1,16 +1,34 @@
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import AppRoutes from './routes/AppRoutes';
-import './index.css';
+import { useState, useEffect } from 'react';
+import Patients from './Patients'; // File quản lý bệnh nhân
+import Login from './Login';       // File đăng nhập
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // 1. Kiểm tra chìa khóa (Token) khi mở web
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  // 2. Hàm xử lý Đăng xuất
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+  };
+
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
-    </BrowserRouter>
+    <div>
+      {isLoggedIn ? (
+        // Đã đăng nhập: Hiện trang Patients và truyền hàm Logout vào trong
+        <Patients onLogout={handleLogout} />
+      ) : (
+        // Chưa đăng nhập: Hiện trang Login
+        <Login onLoginSuccess={() => setIsLoggedIn(true)} />
+      )}
+    </div>
   );
 }
 

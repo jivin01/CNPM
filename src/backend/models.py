@@ -1,11 +1,21 @@
+from sqlmodel import SQLModel, Field
 from typing import Optional
-from sqlmodel import Field, SQLModel
 
-# Đây là khuôn mẫu cho bảng User trong Database
+# Bảng Tài khoản (User)
 class User(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True) # ID tự tăng
-    full_name: str                                            # Họ tên
-    email: str = Field(index=True, unique=True)               # Email (không trùng)
-    hashed_password: str                                      # Mật khẩu (đã mã hóa)
-    role: str = "patient"                                     # Vai trò: 'admin', 'doctor', 'patient'
-    is_active: bool = True                                    # Trạng thái tài khoản (True: đang hoạt động, False: bị khóa)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    email: str = Field(unique=True, index=True)
+    full_name: str
+    hashed_password: str
+    role: str = "patient"  # admin, doctor, patient
+    is_active: bool = True
+
+# Bảng Hồ sơ bệnh nhân (Patient) - Mới thêm vào
+class Patient(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    full_name: str
+    gender: str
+    birth_year: int
+    phone: str
+    address: Optional[str] = None
+    medical_history: Optional[str] = None

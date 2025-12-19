@@ -1,37 +1,39 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import Session, select
 from typing import List
 
+# Import Database & Models
 from database import create_db_and_tables, get_session
-from models import User
-from schemas import UserCreate, UserOut, UserLogin, Token, UserUpdate
+# Quan trọng: Import Models để SQLModel tạo bảng
+from models import User, Patient 
+
+from schemas import UserCreate, UserOut, UserUpdate
+
+# Import Auth Tools
 from auth_utils import (
     get_password_hash, 
-    verify_password, 
-    create_access_token, 
-    create_refresh_token,
-    SECRET_KEY,
-    ALGORITHM
+    get_current_user, 
+    require_admin,
+    router as auth_router # <--- Import Router chứa Login/Register xịn
 )
-from jose import JWTError, jwt
 
-# --- Cấu hình OAuth2 ---
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/login")
+# Import Module
+from patients import router as patients_router
 
-# --- Phần 1: Lifespan ---
+# --- Phần 1: Lifespan (Tự động tạo bảng) ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    create_db_and_tables()
-    print("LOG: Đã khởi tạo Database thành công!")
+    # Tạo bảng nếu chưa có
+    create_db_and_tables() 
+    print("LOG: Đã khởi tạo Database thành công (aura_new.db)!")
     yield
 
 # --- Phần 2: Khởi tạo ứng dụng ---
 app = FastAPI(lifespan=lifespan)
 
-# --- Phần 3: CORS ---
+# --- Phần 3: CORS (Cho phép Frontend kết nối) ---
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -40,102 +42,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- Dependencies (Middleware) ---
-def get_current_user(token: str = Depends(oauth2_scheme), session: Session = Depends(get_session)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-    
-    user = session.exec(select(User).where(User.email == email)).first()
-    if user is None:
-        raise credentials_exception
-    if not user.is_active:
-        raise HTTPException(status_code=400, detail="Tài khoản đã bị khóa")
-    return user
+# === ĐĂNG KÝ ROUTER ===
+# Đưa tính năng Login/Register vào
+app.include_router(auth_router) 
+# Đưa tính năng Bệnh nhân vào
+app.include_router(patients_router)
 
-def require_admin(current_user: User = Depends(get_current_user)):
-    if current_user.role != "admin":
-        raise HTTPException(status_code=403, detail="Bạn không có quyền thực hiện hành động này")
-    return current_user
 
-# --- Phần 4: API Endpoints ---
+# --- Phần 4: API Endpoints (Hệ thống) ---
 
 @app.get("/")
 def read_root():
     return {"message": "AURA Backend: Kết nối Database OK!"}
 
-# --- AUTH APIs ---
-
-@app.post("/api/register", response_model=UserOut)
-def register(user_input: UserCreate, session: Session = Depends(get_session)):
-    statement = select(User).where(User.email == user_input.email)
-    existing_user = session.exec(statement).first()
-    
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email này đã được sử dụng!")
-
-    new_user = User(
-        full_name=user_input.full_name,
-        email=user_input.email,
-        hashed_password=get_password_hash(user_input.password),
-        role=user_input.role or "patient",
-        is_active=True
-    )
-    
-    session.add(new_user)
-    session.commit()
-    session.refresh(new_user)
-    return new_user
-
-@app.post("/api/login", response_model=Token)
-def login(user_input: UserLogin, session: Session = Depends(get_session)):
-    user = session.exec(select(User).where(User.email == user_input.email)).first()
-    if not user or not verify_password(user_input.password, user.hashed_password):
-        raise HTTPException(status_code=400, detail="Email hoặc mật khẩu không chính xác")
-    
-    if not user.is_active:
-        raise HTTPException(status_code=400, detail="Tài khoản của bạn đã bị khóa")
-
-    access_token = create_access_token(data={"sub": user.email, "role": user.role})
-    refresh_token = create_refresh_token(data={"sub": user.email})
-    
-    return {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "token_type": "bearer"
-    }
-
-@app.post("/api/refresh", response_model=Token)
-def refresh_token(refresh_token: str, session: Session = Depends(get_session)):
-    try:
-        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
-        if payload.get("type") != "refresh":
-            raise HTTPException(status_code=401, detail="Invalid refresh token")
-        email: str = payload.get("sub")
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid refresh token")
-    
-    user = session.exec(select(User).where(User.email == email)).first()
-    if not user or not user.is_active:
-        raise HTTPException(status_code=401, detail="User not found or inactive")
-        
-    new_access_token = create_access_token(data={"sub": user.email, "role": user.role})
-    return {
-        "access_token": new_access_token,
-        "refresh_token": refresh_token,
-        "token_type": "bearer"
-    }
-
-# --- USER MANAGEMENT APIs (Staff/Doctor management) ---
+# --- USER MANAGEMENT APIs (Dành cho Admin quản lý) ---
+# Lưu ý: Các API Login/Register đã nằm trong auth_router nên không viết lại ở đây nữa
 
 @app.get("/api/profile", response_model=UserOut)
 def get_profile(current_user: User = Depends(get_current_user)):
@@ -146,6 +67,7 @@ def list_users(
     session: Session = Depends(get_session), 
     admin: User = Depends(require_admin)
 ):
+    """API cho Admin xem danh sách tất cả user"""
     return session.exec(select(User)).all()
 
 @app.post("/api/users", response_model=UserOut)
@@ -154,6 +76,7 @@ def create_user_by_admin(
     session: Session = Depends(get_session),
     admin: User = Depends(require_admin)
 ):
+    """API cho Admin tạo nhanh bác sĩ/nhân viên"""
     statement = select(User).where(User.email == user_input.email)
     existing_user = session.exec(statement).first()
     
@@ -164,7 +87,7 @@ def create_user_by_admin(
         full_name=user_input.full_name,
         email=user_input.email,
         hashed_password=get_password_hash(user_input.password),
-        role=user_input.role or "doctor", # Mặc định là bác sĩ khi admin tạo
+        role=user_input.role or "doctor", # Mặc định admin tạo là tạo doctor
         is_active=True
     )
     
@@ -180,6 +103,7 @@ def update_user_status(
     session: Session = Depends(get_session),
     admin: User = Depends(require_admin)
 ):
+    """API cho Admin khóa/mở khóa tài khoản"""
     user = session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="Không tìm thấy người dùng")
