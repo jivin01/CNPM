@@ -7,7 +7,11 @@ from typing import List
 # Import Database & Models
 from database import create_db_and_tables, get_session
 # Quan trọng: Import Models để SQLModel tạo bảng
+<<<<<<< HEAD
+from models import User, Patient , Appointment
+=======
 from models import User, Patient 
+>>>>>>> ab94d6a9e3ad806a03b9d086343a3493e415ece9
 
 from schemas import UserCreate, UserOut, UserUpdate
 
@@ -22,6 +26,11 @@ from auth_utils import (
 # Import Module
 from patients import router as patients_router
 
+<<<<<<< HEAD
+#Import file logic Lịch hẹn
+import appointments
+=======
+>>>>>>> ab94d6a9e3ad806a03b9d086343a3493e415ece9
 # --- Phần 1: Lifespan (Tự động tạo bảng) ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -47,8 +56,13 @@ app.add_middleware(
 app.include_router(auth_router) 
 # Đưa tính năng Bệnh nhân vào
 app.include_router(patients_router)
+<<<<<<< HEAD
+#   Đưa tính năng Lịch hẹn vào
+app.include_router(appointments.router)
+=======
 
 
+>>>>>>> ab94d6a9e3ad806a03b9d086343a3493e415ece9
 # --- Phần 4: API Endpoints (Hệ thống) ---
 
 @app.get("/")
@@ -65,10 +79,24 @@ def get_profile(current_user: User = Depends(get_current_user)):
 @app.get("/api/users", response_model=List[UserOut])
 def list_users(
     session: Session = Depends(get_session), 
+<<<<<<< HEAD
+    current_user: User = Depends(get_current_user) # <--- SỬA THÀNH CÁI NÀY
+):
+    """API cho mọi người xem danh sách user (để lọc ra bác sĩ)"""
+    return session.exec(select(User)).all()
+# @app.get("/api/users", response_model=List[UserOut])
+# def list_users(
+#     session: Session = Depends(get_session), 
+#     admin: User = Depends(require_admin)
+# ):
+#     """API cho Admin xem danh sách tất cả user"""
+#     return session.exec(select(User)).all()
+=======
     admin: User = Depends(require_admin)
 ):
     """API cho Admin xem danh sách tất cả user"""
     return session.exec(select(User)).all()
+>>>>>>> ab94d6a9e3ad806a03b9d086343a3493e415ece9
 
 @app.post("/api/users", response_model=UserOut)
 def create_user_by_admin(

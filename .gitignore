@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Chặn file hệ thống và thư viện Python
 __pycache__/
 *.py[cod]
@@ -11,4 +12,19 @@ venv/
 # Chặn thư viện Node.js (Frontend)
 node_modules/
 dist/
+=======
+# Chặn file hệ thống và thư viện Python
+__pycache__/
+*.py[cod]
+venv/
+.env
+
+# Chặn file database (Quan trọng: Không up dữ liệu bệnh nhân lên mạng)
+*.db
+*.sqlite3
+
+# Chặn thư viện Node.js (Frontend)
+node_modules/
+dist/
+>>>>>>> ab94d6a9e3ad806a03b9d086343a3493e415ece9
 .DS_Store
