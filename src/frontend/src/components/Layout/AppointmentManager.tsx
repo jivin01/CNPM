@@ -66,7 +66,7 @@ const AppointmentManager = () => {
   const handleBook = async () => {
     setMessage("⏳ Đang xử lý...");
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       // Gửi yêu cầu đặt lịch
       await axios.post('http://127.0.0.1:8000/api/appointments', formData, {
          headers: { Authorization: `Bearer ${token}` }

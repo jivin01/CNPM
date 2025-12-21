@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 from datetime import datetime
-=======
->>>>>>> ab94d6a9e3ad806a03b9d086343a3493e415ece9
 from sqlmodel import SQLModel, Field
 from typing import Optional
 
@@ -14,7 +11,7 @@ class User(SQLModel, table=True):
     role: str = "patient"  # admin, doctor, patient
     is_active: bool = True
 
-# Bảng Hồ sơ bệnh nhân (Patient) - Mới thêm vào
+# Bảng Hồ sơ bệnh nhân (Patient)
 class Patient(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     full_name: str
@@ -22,13 +19,9 @@ class Patient(SQLModel, table=True):
     birth_year: int
     phone: str
     address: Optional[str] = None
-<<<<<<< HEAD
     medical_history: Optional[str] = None
 
-
-
-
-# === THÊM BẢNG LỊCH HẸN (TASK 3) ===
+# Bảng Lịch hẹn (Appointment)
 class Appointment(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     
@@ -40,6 +33,15 @@ class Appointment(SQLModel, table=True):
     duration_minutes: int = 30  # Mặc định khám 30 phút
     status: str = "PENDING"     # PENDING, COMPLETED, CANCELLED
     reason: Optional[str] = None
-=======
-    medical_history: Optional[str] = None
->>>>>>> ab94d6a9e3ad806a03b9d086343a3493e415ece9
+# Bảng Hồ sơ Khám bệnh (Lưu kết quả khám)
+class MedicalRecord(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    
+    appointment_id: int = Field(foreign_key="appointment.id") # Link với lịch hẹn
+    doctor_id: int
+    patient_id: int
+    
+    diagnosis: str          # Chẩn đoán bệnh
+    prescription: str       # Đơn thuốc
+    notes: Optional[str] = None # Ghi chú thêm
+    created_at: datetime = Field(default_factory=datetime.now)

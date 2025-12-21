@@ -3,15 +3,13 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session, select
 from typing import List
+from models import User, Patient, Appointment, MedicalRecord
+import medical_exam
 
 # Import Database & Models
 from database import create_db_and_tables, get_session
-# Quan trọng: Import Models để SQLModel tạo bảng
-<<<<<<< HEAD
-from models import User, Patient , Appointment
-=======
-from models import User, Patient 
->>>>>>> ab94d6a9e3ad806a03b9d086343a3493e415ece9
+# Quan trọng: Import đầy đủ Models để SQLModel tạo bảng
+from models import User, Patient, Appointment
 
 from schemas import UserCreate, UserOut, UserUpdate
 
@@ -20,17 +18,13 @@ from auth_utils import (
     get_password_hash, 
     get_current_user, 
     require_admin,
-    router as auth_router # <--- Import Router chứa Login/Register xịn
+    router as auth_router 
 )
 
-# Import Module
+# Import Module routers
 from patients import router as patients_router
+import appointments # Import file logic Lịch hẹn
 
-<<<<<<< HEAD
-#Import file logic Lịch hẹn
-import appointments
-=======
->>>>>>> ab94d6a9e3ad806a03b9d086343a3493e415ece9
 # --- Phần 1: Lifespan (Tự động tạo bảng) ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -52,25 +46,18 @@ app.add_middleware(
 )
 
 # === ĐĂNG KÝ ROUTER ===
-# Đưa tính năng Login/Register vào
 app.include_router(auth_router) 
-# Đưa tính năng Bệnh nhân vào
 app.include_router(patients_router)
-<<<<<<< HEAD
-#   Đưa tính năng Lịch hẹn vào
-app.include_router(appointments.router)
-=======
+app.include_router(appointments.router) # Đưa tính năng Lịch hẹn vào
+app.include_router(medical_exam.router)
 
-
->>>>>>> ab94d6a9e3ad806a03b9d086343a3493e415ece9
 # --- Phần 4: API Endpoints (Hệ thống) ---
 
 @app.get("/")
 def read_root():
     return {"message": "AURA Backend: Kết nối Database OK!"}
 
-# --- USER MANAGEMENT APIs (Dành cho Admin quản lý) ---
-# Lưu ý: Các API Login/Register đã nằm trong auth_router nên không viết lại ở đây nữa
+# --- USER MANAGEMENT APIs ---
 
 @app.get("/api/profile", response_model=UserOut)
 def get_profile(current_user: User = Depends(get_current_user)):
@@ -79,24 +66,10 @@ def get_profile(current_user: User = Depends(get_current_user)):
 @app.get("/api/users", response_model=List[UserOut])
 def list_users(
     session: Session = Depends(get_session), 
-<<<<<<< HEAD
-    current_user: User = Depends(get_current_user) # <--- SỬA THÀNH CÁI NÀY
+    current_user: User = Depends(get_current_user)
 ):
     """API cho mọi người xem danh sách user (để lọc ra bác sĩ)"""
     return session.exec(select(User)).all()
-# @app.get("/api/users", response_model=List[UserOut])
-# def list_users(
-#     session: Session = Depends(get_session), 
-#     admin: User = Depends(require_admin)
-# ):
-#     """API cho Admin xem danh sách tất cả user"""
-#     return session.exec(select(User)).all()
-=======
-    admin: User = Depends(require_admin)
-):
-    """API cho Admin xem danh sách tất cả user"""
-    return session.exec(select(User)).all()
->>>>>>> ab94d6a9e3ad806a03b9d086343a3493e415ece9
 
 @app.post("/api/users", response_model=UserOut)
 def create_user_by_admin(

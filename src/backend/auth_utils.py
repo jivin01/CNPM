@@ -123,9 +123,14 @@ def login(user_in: UserLogin, session: Session = Depends(get_session)):
         data={"sub": user.email, "role": user.role, "id": user.id},
         expires_delta=access_token_expires
     )
+
     
     return {
         "access_token": access_token, 
         "refresh_token": "not-implemented", 
         "token_type": "bearer"
     }
+
+@router.get("/profile", response_model=UserOut)
+def read_users_me(current_user: User = Depends(get_current_user)):
+    return current_user
