@@ -5,6 +5,7 @@ import Layout from '../components/Layout/Layout';
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import Profile from '../pages/Profile';
+import AppointmentManager from '../components/layout/AppointmentManager';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
@@ -40,6 +41,8 @@ const AppRoutes: React.FC = () => {
         <Route index element={<Dashboard />} />
         <Route path="profile" element={<Profile />} />
         {/* Các route khác sẽ thêm ở đây */}
+        <Route path="appointments" element={<AppointmentManager />} />
+
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

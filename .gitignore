@@ -4,11 +4,19 @@ __pycache__/
 venv/
 .env
 
-# Chặn file database (Quan trọng: Không up dữ liệu bệnh nhân lên mạng)
+# Chặn file database (Không up dữ liệu bệnh nhân lên mạng)
 *.db
 *.sqlite3
 
 # Chặn thư viện Node.js (Frontend)
 node_modules/
 dist/
+
+# Chặn cấu hình IDE (Quan trọng để sửa lỗi Permission Denied)
+.vs/
+.vscode/
+*.user
+*.sln.docstates
+
+# Khác
 .DS_Store
