@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, User, Users, LogOut, LayoutDashboard } from 'lucide-react';
+// Thêm icon CircleDollarSign vào phần import
+import { Home, User, Users, LogOut, LayoutDashboard, CircleDollarSign } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const Sidebar: React.FC = () => {
@@ -10,6 +11,8 @@ const Sidebar: React.FC = () => {
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
     { icon: User, label: 'Profile', path: '/profile' },
+    // --- Thêm mục mới ở đây ---
+    { icon: CircleDollarSign, label: 'Thu Ngân & Hóa Đơn', path: '/billing' },
   ];
 
   if (user?.role === 'admin') {

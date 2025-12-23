@@ -8,7 +8,7 @@ interface Appointment {
   doctor_id: number;
   appointment_time: string;
   status: string;
-  patient_name?: string; // (Tuỳ chọn) Nếu backend có trả về tên bệnh nhân
+  patient_name?: string; 
 }
 
 interface User {
@@ -45,7 +45,6 @@ const AppointmentManager = () => {
 
   const loadData = async () => {
     try {
-      // Lưu ý: Kiểm tra key lưu token của bạn là 'token' hay 'access_token'
       const token = localStorage.getItem('token') || localStorage.getItem('access_token'); 
       const config = { headers: { Authorization: `Bearer ${token}` } };
       
@@ -59,23 +58,48 @@ const AppointmentManager = () => {
 
       // 3. Lấy danh sách lịch hẹn
       const aRes = await axios.get('http://127.0.0.1:8000/api/appointments', config);
-      setAppointments(aRes.data);
+      
+      // --- SỬA: Sắp xếp lịch mới nhất lên đầu danh sách ---
+      // Giúp bạn nhìn thấy ngay lịch vừa đặt ở dòng đầu tiên
+      const sortedList = aRes.data.sort((a: Appointment, b: Appointment) => 
+        new Date(b.appointment_time).getTime() - new Date(a.appointment_time).getTime()
+      );
+      setAppointments(sortedList);
+
     } catch (error) {
       console.error("Lỗi tải dữ liệu:", error);
     }
   };
 
   const handleBook = async () => {
+    // Kiểm tra chưa chọn thông tin
+    if (!formData.patient_id || !formData.doctor_id || !formData.appointment_time) {
+        setMessage("⚠️ Vui lòng điền đầy đủ thông tin!");
+        return;
+    }
+
     setMessage("⏳ Đang xử lý...");
     try {
       const token = localStorage.getItem('token') || localStorage.getItem('access_token');
+      
       // Gửi yêu cầu đặt lịch
       await axios.post('http://127.0.0.1:8000/api/appointments', formData, {
          headers: { Authorization: `Bearer ${token}` }
       });
       
       setMessage("✅ Đặt lịch thành công!");
-      loadData(); // Tải lại bảng danh sách
+      
+      // --- QUAN TRỌNG: Đợi tải lại bảng xong mới làm tiếp ---
+      await loadData(); 
+
+      // --- SỬA: Xóa trắng form để nhập cái mới ---
+      setFormData({
+        patient_id: '',
+        doctor_id: '',
+        appointment_time: '',
+        reason: ''
+      });
+
     } catch (error: any) {
       if (error.response && error.response.data.detail) {
         setMessage("❌ " + error.response.data.detail);
@@ -85,7 +109,6 @@ const AppointmentManager = () => {
     }
   };
 
-  // --- MỚI THÊM: HÀM XỬ LÝ XÓA ---
   const handleDelete = async (id: number) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa lịch hẹn này không?")) {
       try {
@@ -96,14 +119,13 @@ const AppointmentManager = () => {
         });
 
         alert("Đã xóa thành công!");
-        loadData(); // Load lại dữ liệu để cập nhật bảng
+        loadData(); // Load lại dữ liệu để cập nhật bảng ngay lập tức
       } catch (error) {
         console.error("Lỗi khi xóa:", error);
         alert("Có lỗi xảy ra, không thể xóa!");
       }
     }
   };
-  // --------------------------------
 
   return (
     <div style={{ padding: '20px', borderTop: '2px solid #eee', marginTop: '20px' }}>
@@ -116,6 +138,7 @@ const AppointmentManager = () => {
                 <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Chọn Bệnh Nhân:</label>
                 <select 
                   style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                  value={formData.patient_id}
                   onChange={e => setFormData({...formData, patient_id: e.target.value})}
                 >
                     <option value="">-- Chọn bệnh nhân --</option>
@@ -128,6 +151,7 @@ const AppointmentManager = () => {
                 <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Chọn Bác Sĩ:</label>
                 <select 
                   style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                  value={formData.doctor_id}
                   onChange={e => setFormData({...formData, doctor_id: e.target.value})}
                 >
                     <option value="">-- Chọn bác sĩ --</option>
@@ -143,6 +167,7 @@ const AppointmentManager = () => {
             <input 
               type="datetime-local" 
               style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+              value={formData.appointment_time}
               onChange={e => setFormData({...formData, appointment_time: e.target.value})}
             />
         </div>
@@ -157,7 +182,7 @@ const AppointmentManager = () => {
           ĐẶT LỊCH NGAY
         </button>
 
-        {message && <p style={{ marginTop: '10px', fontWeight: 'bold', color: message.includes('✅') ? 'green' : 'red' }}>{message}</p>}
+        {message && <p style={{ marginTop: '10px', fontWeight: 'bold', color: message.includes('✅') ? 'green' : message.includes('⚠️') ? 'orange' : 'red' }}>{message}</p>}
       </div>
 
       {/* DANH SÁCH LỊCH HẸN */}
@@ -165,20 +190,24 @@ const AppointmentManager = () => {
         <thead>
             <tr style={{ background: '#e2e8f0' }}>
                 <th style={{ padding: '10px', border: '1px solid #cbd5e1' }}>STT</th>
+                <th style={{ padding: '10px', border: '1px solid #cbd5e1' }}>Bệnh nhân</th>
                 <th style={{ padding: '10px', border: '1px solid #cbd5e1' }}>Giờ khám</th>
-                <th style={{ padding: '10px', border: '1px solid #cbd5e1' }}>Trạng thái</th>
-                {/* Thêm cột hành động */}
+                <th style={{ padding: '10px', border: '1px solid #cbd5e1' }}>Trạng thái</th> 
                 <th style={{ padding: '10px', border: '1px solid #cbd5e1' }}>Hành động</th>
             </tr>
         </thead>
         <tbody>
             {appointments.map((a, index) => (
                 <tr key={a.id}>
-                    {/* Hiển thị số thứ tự (index + 1) */}
                     <td style={{ padding: '10px', border: '1px solid #cbd5e1', textAlign: 'center', fontWeight: 'bold' }}>
                         {index + 1}
                     </td>
                     
+                    {/* --- SỬA: Hiện tên bệnh nhân thay vì hiện mỗi số ID --- */}
+                    <td style={{ padding: '10px', border: '1px solid #cbd5e1' }}>
+                        {patients.find(p => p.id === a.patient_id)?.full_name || `ID: ${a.patient_id}`}
+                    </td>
+
                     <td style={{ padding: '10px', border: '1px solid #cbd5e1' }}>
                         {new Date(a.appointment_time).toLocaleString()}
                     </td>
@@ -187,7 +216,6 @@ const AppointmentManager = () => {
                             {a.status}
                         </span>
                     </td>
-                    {/* Cột chứa nút Xóa */}
                     <td style={{ padding: '10px', border: '1px solid #cbd5e1', textAlign: 'center' }}>
                         <button 
                             onClick={() => handleDelete(a.id)}
@@ -201,6 +229,13 @@ const AppointmentManager = () => {
                     </td>
                 </tr>
             ))}
+            {appointments.length === 0 && (
+                <tr>
+                    <td colSpan={5} style={{ padding: '20px', textAlign: 'center', color: '#888' }}>
+                        Chưa có lịch hẹn nào...
+                    </td>
+                </tr>
+            )}
         </tbody>
       </table>
     </div>

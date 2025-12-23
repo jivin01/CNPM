@@ -5,8 +5,10 @@ import Login from './Login';
 import AppointmentManager from './components/Layout/AppointmentManager';
 // Import Khám bệnh
 import MedicalExam from './components/Layout/MedicalExam';
-// --- MỚI: Import Quản lý kho thuốc ---
+// Import Quản lý kho thuốc
 import MedicineManager from './pages/MedicineManager'; 
+// --- MỚI: Import Thu Ngân ---
+import BillingManager from './pages/BillingManager';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -66,11 +68,10 @@ function App() {
                <h2 style={{ color: '#389e0d', borderBottom: '2px solid #389e0d', display: 'inline-block', marginBottom: '15px' }}>
                    3. Phòng Khám Bệnh (Dành cho Bác sĩ)
                </h2>
-               {/* Lưu ý: PrescriptionForm (Kê đơn) đã nằm bên trong MedicalExam rồi */}
                <MedicalExam />
             </section>
 
-            {/* 4. QUẢN LÝ KHO THUỐC (MỚI THÊM) */}
+            {/* 4. QUẢN LÝ KHO THUỐC */}
             <section style={{ background: '#f9f0ff', padding: '20px', borderRadius: '10px', border: '1px solid #d3adf7' }}>
                <h2 style={{ color: '#722ed1', borderBottom: '2px solid #722ed1', display: 'inline-block', marginBottom: '15px' }}>
                    4. Quản Lý Kho Thuốc (Admin/Dược sĩ)
@@ -79,6 +80,17 @@ function App() {
                  * Tại đây nhập thuốc mới. Số lượng sẽ tự trừ khi Bác sĩ kê đơn ở mục 3.
                </p>
                <MedicineManager />
+            </section>
+
+            {/* --- MỚI THÊM: 5. THU NGÂN --- */}
+            <section style={{ background: '#fff7e6', padding: '20px', borderRadius: '10px', border: '1px solid #ffd591' }}>
+               <h2 style={{ color: '#d46b08', borderBottom: '2px solid #d46b08', display: 'inline-block', marginBottom: '15px' }}>
+                   5. Thu Ngân & Hóa Đơn
+               </h2>
+               <p style={{fontStyle: 'italic', color: '#666', marginBottom: '10px'}}>
+                 * Tính tiền đơn thuốc và in hóa đơn cho bệnh nhân.
+               </p>
+               <BillingManager />
             </section>
 
           </div>

@@ -75,3 +75,4 @@ class MedicalRecord(SQLModel, table=True):
     prescription: str       # Đơn thuốc
     notes: Optional[str] = None # Ghi chú thêm
     created_at: datetime = Field(default_factory=datetime.now)
+    status: str = "pending" # <--- Thêm dòng này vào models.py

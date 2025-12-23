@@ -78,9 +78,8 @@ export default function Patients({ onLogout }: PatientsProps) {
     }
   };
 
-  // --- HÀM XÓA (MỚI THÊM) ---
+  // --- HÀM XÓA ---
   const handleDelete = async (id: number) => {
-    // Hỏi lại cho chắc ăn
     if (!window.confirm("⚠️ CẢNH BÁO: Bạn có chắc chắn muốn xóa hồ sơ này không?")) {
       return;
     }
@@ -91,7 +90,7 @@ export default function Patients({ onLogout }: PatientsProps) {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert("🗑️ Đã xóa hồ sơ thành công!");
-      fetchPatients(); // Tải lại bảng để mất dòng vừa xóa
+      fetchPatients(); 
     } catch (error) {
       alert("Lỗi: Không thể xóa được!");
     }
@@ -187,6 +186,11 @@ export default function Patients({ onLogout }: PatientsProps) {
                 <th className="p-3 border-b">Họ Tên</th>
                 <th className="p-3 border-b">Tuổi/Giới tính</th>
                 <th className="p-3 border-b">SĐT</th>
+                
+                {/* --- ĐÃ THÊM CỘT ĐỊA CHỈ VÀ TIỀN SỬ BỆNH --- */}
+                <th className="p-3 border-b">Địa chỉ</th>
+                <th className="p-3 border-b">Tiền sử bệnh</th>
+                
                 <th className="p-3 border-b text-center">Hành động</th>
               </tr>
             </thead>
@@ -194,10 +198,7 @@ export default function Patients({ onLogout }: PatientsProps) {
               {filteredPatients.map((p) => (
                 <tr key={p.id} className="hover:bg-gray-50 border-b last:border-0">
                   <td className="p-3 font-mono text-gray-500">#{p.id}</td>
-                  <td className="p-3 font-semibold text-gray-800">
-                    {p.full_name}
-                    <div className="text-xs text-gray-400 font-normal">{p.address}</div>
-                  </td>
+                  <td className="p-3 font-semibold text-gray-800">{p.full_name}</td>
                   <td className="p-3">
                     <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-1">
                       {new Date().getFullYear() - p.birth_year} tuổi
@@ -205,15 +206,18 @@ export default function Patients({ onLogout }: PatientsProps) {
                     <span className="text-gray-600">{p.gender}</span>
                   </td>
                   <td className="p-3 text-blue-600 font-medium">{p.phone}</td>
+
+                  {/* --- ĐÃ THÊM DỮ LIỆU ĐỊA CHỈ VÀ TIỀN SỬ BỆNH --- */}
+                  <td className="p-3 text-gray-700">{p.address}</td>
+                  <td className="p-3 text-gray-600 italic">{p.medical_history}</td>
+
                   <td className="p-3 text-center space-x-2">
-                    {/* NÚT SỬA */}
                     <button 
                       onClick={() => handleEditClick(p)}
                       className="text-orange-500 hover:text-orange-700 font-medium px-2 py-1 border border-orange-200 rounded hover:bg-orange-50"
                     >
                       ✏️ Sửa
                     </button>
-                    {/* NÚT XÓA MỚI THÊM */}
                     <button 
                       onClick={() => handleDelete(p.id)}
                       className="text-red-500 hover:text-red-700 font-medium px-2 py-1 border border-red-200 rounded hover:bg-red-50"
@@ -225,7 +229,7 @@ export default function Patients({ onLogout }: PatientsProps) {
               ))}
               {filteredPatients.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-gray-400 italic">
+                  <td colSpan={7} className="p-8 text-center text-gray-400 italic">
                     Không tìm thấy bệnh nhân nào...
                   </td>
                 </tr>
