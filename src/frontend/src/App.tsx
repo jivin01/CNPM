@@ -15,7 +15,7 @@ function App() {
 
   // 1. Kiểm tra Token khi mở web
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
     if (token) {
       setIsLoggedIn(true);
     }
@@ -23,7 +23,7 @@ function App() {
 
   // 2. Hàm xử lý Đăng xuất
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('access_token');
     setIsLoggedIn(false);
   };
 

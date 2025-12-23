@@ -9,6 +9,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [role, setRole] = useState<'patient'|'doctor'>('patient');
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,7 +19,8 @@ export default function Login({ onLoginSuccess }: LoginProps) {
       // --- PHẦN QUAN TRỌNG ĐÃ SỬA ---
       // Backend của con mong đợi JSON: { "email": "...", "password": "..." }
       
-      const response = await fetch('http://localhost:8000/api/login', {
+      const endpoint = role === 'doctor' ? 'http://localhost:8000/api/login/doctor' : 'http://localhost:8000/api/login/user'
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json' // <--- Phải là JSON
@@ -33,7 +35,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
       if (response.ok) {
         const data = await response.json();
         // Lưu token vào localStorage
-        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('access_token', data.access_token);
         console.log("Đăng nhập thành công!", data);
         onLoginSuccess(); 
       } else {
@@ -50,7 +52,14 @@ export default function Login({ onLoginSuccess }: LoginProps) {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">AURA LOGIN</h2>
-        
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <label className="inline-flex items-center">
+            <input type="radio" name="role" value="patient" checked={role==='patient'} onChange={()=>setRole('patient')} className="mr-2" /> Bệnh nhân
+          </label>
+          <label className="inline-flex items-center">
+            <input type="radio" name="role" value="doctor" checked={role==='doctor'} onChange={()=>setRole('doctor')} className="mr-2" /> Bác sĩ
+          </label>
+        </div>
         {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-sm font-medium text-center">{error}</div>}
         
         <form onSubmit={handleLogin} className="space-y-4">

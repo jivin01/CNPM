@@ -33,7 +33,7 @@ export default function Patients({ onLogout }: PatientsProps) {
   // Tải danh sách
   const fetchPatients = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       const response = await axios.get('http://localhost:8000/api/patients', {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -50,7 +50,7 @@ export default function Patients({ onLogout }: PatientsProps) {
   // Xử lý Thêm / Sửa
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
     const headers = { Authorization: `Bearer ${token}` };
     
     const data = {
@@ -85,7 +85,7 @@ export default function Patients({ onLogout }: PatientsProps) {
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       await axios.delete(`http://localhost:8000/api/patients/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });

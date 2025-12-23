@@ -17,7 +17,8 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # Công cụ mã hóa mật khẩu
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Use pbkdf2_sha256 to avoid bcrypt backend issues in some environments
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 # Cấu hình để FastAPI biết lấy token ở đâu (URL đăng nhập)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/login")
@@ -103,6 +104,20 @@ def register(user_in: UserCreate, session: Session = Depends(get_session)):
     session.refresh(new_user)
     return new_user
 
+
+@router.post("/register/user", response_model=UserOut)
+def register_user(user_in: UserCreate, session: Session = Depends(get_session)):
+    # Force role to patient
+    user_in.role = "patient"
+    return register(user_in, session)
+
+
+@router.post("/register/doctor", response_model=UserOut)
+def register_doctor(user_in: UserCreate, session: Session = Depends(get_session)):
+    # Force role to doctor
+    user_in.role = "doctor"
+    return register(user_in, session)
+
 @router.post("/login", response_model=Token)
 def login(user_in: UserLogin, session: Session = Depends(get_session)):
     # 1. Tìm user
@@ -130,6 +145,25 @@ def login(user_in: UserLogin, session: Session = Depends(get_session)):
         "refresh_token": "not-implemented", 
         "token_type": "bearer"
     }
+
+
+@router.post("/login/user", response_model=Token)
+def login_user(user_in: UserLogin, session: Session = Depends(get_session)):
+    token = login(user_in, session)
+    # verify role
+    payload = jwt.decode(token["access_token"], SECRET_KEY, algorithms=[ALGORITHM])
+    if payload.get("role") != "patient":
+        raise HTTPException(status_code=403, detail="Tài khoản không phải bệnh nhân")
+    return token
+
+
+@router.post("/login/doctor", response_model=Token)
+def login_doctor(user_in: UserLogin, session: Session = Depends(get_session)):
+    token = login(user_in, session)
+    payload = jwt.decode(token["access_token"], SECRET_KEY, algorithms=[ALGORITHM])
+    if payload.get("role") != "doctor":
+        raise HTTPException(status_code=403, detail="Tài khoản không phải bác sĩ")
+    return token
 
 @router.get("/profile", response_model=UserOut)
 def read_users_me(current_user: User = Depends(get_current_user)):

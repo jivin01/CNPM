@@ -9,7 +9,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 # --- IMPORT DATABASE & MODELS ---
 from database import create_db_and_tables, get_session, engine 
 # Lưu ý: Import đủ các bảng để SQLModel tạo bảng trong DB
-from models import User, Patient, Appointment, MedicalRecord, Medicine, Prescription, PrescriptionItem
+from models import User, Patient, Appointment, MedicalRecord, Medicine, Prescription, PrescriptionItem, AIDiagnosis
 from schemas import UserCreate, UserOut, UserUpdate
 
 # --- IMPORT MODULE ROUTERS (QUAN TRỌNG) ---
@@ -17,6 +17,7 @@ from routers import pharmacy  # File xử lý thuốc bạn vừa tạo
 from patients import router as patients_router
 import appointments 
 import medical_exam 
+import ai_router
 
 # --- IMPORT AUTH TOOLS ---
 from auth_utils import (
@@ -81,6 +82,7 @@ app.include_router(pharmacy.router)      # <-- Dòng này đã lo hết phần T
 app.include_router(patients_router)
 app.include_router(appointments.router)
 app.include_router(medical_exam.router)
+app.include_router(ai_router.router)
 
 # ==========================================
 

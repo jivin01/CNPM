@@ -3,6 +3,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout/Layout';
 import Login from '../pages/Login';
+import Register from '../pages/Register';
+import UploadRetina from '../pages/UploadRetina';
+import DoctorDashboard from '../pages/DoctorDashboard';
 import Dashboard from '../pages/Dashboard';
 import Profile from '../pages/Profile';
 import AppointmentManager from '../components/layout/AppointmentManager';
@@ -40,11 +43,14 @@ const AppRoutes: React.FC = () => {
       >
         <Route index element={<Dashboard />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="upload" element={<UploadRetina />} />
+        <Route path="doctor" element={<DoctorDashboard />} />
         {/* Các route khác sẽ thêm ở đây */}
         <Route path="appointments" element={<AppointmentManager />} />
 
       </Route>
 
+      <Route path="/register" element={<Register />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

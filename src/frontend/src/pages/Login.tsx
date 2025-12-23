@@ -7,6 +7,7 @@ import { Lock, Mail, Loader2, AlertCircle } from 'lucide-react';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState<'patient'|'doctor'>('patient');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
@@ -18,7 +19,8 @@ const Login: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/login', {
+      const endpoint = role === 'doctor' ? 'http://127.0.0.1:8000/api/login/doctor' : 'http://127.0.0.1:8000/api/login/user'
+      const response = await axios.post(endpoint, {
         email,
         password,
       });
@@ -38,6 +40,15 @@ const Login: React.FC = () => {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-slate-800">🏥 AURA</h1>
           <p className="text-slate-500 mt-2">Đăng nhập để vào hệ thống</p>
+        </div>
+
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <label className="inline-flex items-center">
+            <input type="radio" name="role" value="patient" checked={role==='patient'} onChange={()=>setRole('patient')} className="mr-2" /> Bệnh nhân
+          </label>
+          <label className="inline-flex items-center">
+            <input type="radio" name="role" value="doctor" checked={role==='doctor'} onChange={()=>setRole('doctor')} className="mr-2" /> Bác sĩ
+          </label>
         </div>
 
         {error && (
@@ -93,6 +104,9 @@ const Login: React.FC = () => {
             )}
           </button>
         </form>
+        <div className="mt-4 text-center">
+          <a href="/register" className="text-sm text-blue-600 hover:underline">Tạo tài khoản</a>
+        </div>
       </div>
     </div>
   );

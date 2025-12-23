@@ -51,7 +51,7 @@ const MedicalExam = () => {
 
   const loadPendingAppointments = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       const res = await axios.get('http://127.0.0.1:8000/api/appointments', {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -65,7 +65,7 @@ const MedicalExam = () => {
 
   const loadHistory = async (patientId: number) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       const res = await axios.get(`http://127.0.0.1:8000/api/medical/history/${patientId}`, {
          headers: { Authorization: `Bearer ${token}` }
       });
@@ -83,7 +83,7 @@ const MedicalExam = () => {
     if (!diagnosis) return alert("Vui lòng nhập chẩn đoán!");
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
       
       // 1. Gọi API Lưu Chẩn Đoán
       const res = await axios.post('http://127.0.0.1:8000/api/medical/finish-exam', {

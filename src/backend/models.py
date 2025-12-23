@@ -76,3 +76,15 @@ class MedicalRecord(SQLModel, table=True):
     notes: Optional[str] = None # Ghi chú thêm
     created_at: datetime = Field(default_factory=datetime.now)
     status: str = "pending" # <--- Thêm dòng này vào models.py
+
+
+# 5. Bảng Lưu kết quả AI chẩn đoán ảnh võng mạc
+class AIDiagnosis(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    patient_id: int = Field(foreign_key="patient.id")
+    image_path: str
+    result_json: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.now)
+    status: str = "pending"  # pending, reviewed, assigned
+    assigned_doctor_id: Optional[int] = Field(default=None, foreign_key="user.id")
+    medical_record_id: Optional[int] = Field(default=None, foreign_key="medicalrecord.id")
