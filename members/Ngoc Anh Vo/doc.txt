@@ -1,6 +1,17 @@
 git checkout -b ngoc-anh-vo
-# CODE CHỈ TRONG members/member3/
 
-git add members/member3/
-git commit -m "Member3: implement feature"
+git add "members/Ngoc Anh Vo/"
+git commit -m "Ngọc Anh Võ: update doc"
 git push origin ngoc-anh-vo
+
+
+
+
+Backend Developer (Core & Security)
+
+Nhiệm vụ:
+
+Xây dựng Database (PostgreSQL/SQL Server) bằng EF Core.
+
+Code chức năng Đăng ký/Đăng nhập, phân quyền (RBAC) cho 4 nhóm quyền.
+Quản lý hồ sơ y tế cơ bản của bệnh nhân.

@@ -1,6 +1,13 @@
 git checkout -b nguyen-manh-hung
-# CODE CHỈ TRONG members/member4/
 
-git add members/member4/
-git commit -m "Member4: implement feature"
+git add "members/Nguyễn Mạnh Hùng/"
+git commit -m "Nguyễn Mạnh Hùng: update doc"
 git push origin nguyen-manh-hung
+
+
+
+AI Specialist (Python Engineer)
+
+Code lõi AI bằng Python (FastAPI).
+Xử lý ảnh võng mạc: Tách mạch máu, tính toán chỉ số sức khỏe.
+Xuất ra file ảnh đã đánh dấu (Annotated image) và JSON kết quả.

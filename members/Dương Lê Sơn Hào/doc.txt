@@ -1,6 +1,16 @@
 git checkout -b duong-le-son-hao
-# CODE CHỈ TRONG members/member2/
 
-git add members/member2/
-git commit -m "Member2: implement feature"
+git add "members/Dương Lê Sơn Hào/"
+git commit -m "Dương Lê Sơn Hào: update doc"
 git push origin duong-le-son-hao
+
+
+Middleware Developer (Cloud & Real-time)
+
+Nhiệm vụ:
+
+Tích hợp Cloudinary/Supabase để lưu và lấy ảnh y tế cực nhanh.
+
+Code hệ thống Chat trực tuyến giữa bác sĩ và bệnh nhân (SignalR).
+
+Code hệ thống thông báo đẩy (Push Notification) khi có kết quả.

@@ -1,6 +1,14 @@
 git checkout -b vo-quynh
-# CODE CHỈ TRONG members/member6/
 
-git add members/member6/
-git commit -m "Member6: implement feature"
+git add "members/Võ Quỳnh/"
+git commit -m "Võ Quỳnh: update doc"
 git push origin vo-quynh
+
+
+
+Data Engineer (Reporting & Analytics)
+Viết code xuất báo cáo y tế sang PDF chuyên nghiệp (có logo, bảng biểu).
+
+Code các API thống kê dữ liệu lớn cho Admin (số lượng ca bệnh theo vùng, tỷ lệ rủi ro).
+
+Chức năng backup dữ liệu y tế định kỳ.

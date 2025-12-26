@@ -5,3 +5,10 @@ git add members/member1/
 git commit -m "Member1: implement feature"
 git push origin dao-chi-hieu
 
+
+
+Frontend Developer (Patient App)
+Nhiệm vụ:
+Code giao diện cho bệnh nhân bằng React/TypeScript.
+Chức năng Upload ảnh và theo dõi tiến trình AI đang phân tích.
+Giao diện hiển thị biểu đồ rủi ro sức khỏe cá nhân.

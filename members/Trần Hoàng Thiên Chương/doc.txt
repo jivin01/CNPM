@@ -1,6 +1,14 @@
 git checkout -b tran-hoang-thien-chuong
-# CODE CHỈ TRONG members/member5/
 
-git add members/member5/
-git commit -m "Member5: implement feature"
+git add "members/Trần Hoàng Thiên Chương/"
+git commit -m "Trần Hoàng Thiên Chương: update doc"
 git push origin tran-hoang-thien-chuong
+
+
+
+
+Frontend Developer (Doctor/Clinic Dashboard)
+
+Code giao diện cho Bác sĩ duyệt bệnh án và chỉnh sửa chẩn đoán của AI.
+Giao diện quản lý cho chủ Phòng khám (quản lý danh sách bác sĩ, xem lượt dùng).
+Quản lý gói dịch vụ và thanh toán.
