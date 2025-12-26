@@ -1,9 +1,11 @@
-git checkout -b dao-chi-hieu
-# CODE CHỈ TRONG members/member1/
 
-git add members/member1/
-git commit -m "Member1: implement feature"
+Lệnh đẩy code 
+git checkout -b dao-chi-hieu
+
+git add "members/Đào Chí Hiếu/"
+git commit -m "Đào Chí Hiếu: update doc"
 git push origin dao-chi-hieu
+
 
 
 
@@ -12,3 +14,9 @@ Nhiệm vụ:
 Code giao diện cho bệnh nhân bằng React/TypeScript.
 Chức năng Upload ảnh và theo dõi tiến trình AI đang phân tích.
 Giao diện hiển thị biểu đồ rủi ro sức khỏe cá nhân.
+
+Tiền xử lý (preprocessing.py): Viết hàm chuyển ảnh màu sang xám, khử nhiễu và làm rõ mạch máu bằng thuật toán CLAHE.
+Phân đoạn (segmentation.py): Sử dụng mô hình U-Net (hoặc DeepLabV3) để tạo ra một "mặt nạ" (mask) chỉ chứa các mạch máu.
+API (ai_api.py): Dùng FastAPI tạo cổng nhận ảnh từ Backend, chạy AI và trả về:
+risk_score: Con số rủi ro (0-100%).
+annotated_image: Link ảnh đã được vẽ đè mạch máu

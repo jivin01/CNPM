@@ -14,3 +14,9 @@ Tích hợp Cloudinary/Supabase để lưu và lấy ảnh y tế cực nhanh.
 Code hệ thống Chat trực tuyến giữa bác sĩ và bệnh nhân (SignalR).
 
 Code hệ thống thông báo đẩy (Push Notification) khi có kết quả.
+
+Database (Data/): Tạo các bảng Users (Người dùng), AnalysisRecords (Hồ sơ phân tích) và MedicalHistory (Lịch sử y tế).
+
+Xác thực (Auth/): Cài đặt thư viện JWT để cấp "vé thông hành" cho người dùng khi đăng nhập.
+
+Phân quyền (Middleware/): Viết code kiểm tra: Nếu là Bệnh nhân thì không được vào xem danh sách của Bác sĩ.

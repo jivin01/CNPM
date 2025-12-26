@@ -11,3 +11,9 @@ AI Specialist (Python Engineer)
 Code lõi AI bằng Python (FastAPI).
 Xử lý ảnh võng mạc: Tách mạch máu, tính toán chỉ số sức khỏe.
 Xuất ra file ảnh đã đánh dấu (Annotated image) và JSON kết quả.
+
+Lưu trữ (StorageService.cs): Viết hàm đẩy ảnh lên Cloudinary hoặc Supabase. Sau khi đẩy xong, lấy link ảnh trả về cho Backend lưu vào Database.
+
+Nhắn tin (ChatHub.cs): Dùng SignalR để tạo luồng chat trực tiếp. Khi bệnh nhân nhắn, bác sĩ nhận được ngay lập tức.
+
+Thông báo: Code để hệ thống gửi Email hoặc thông báo trình duyệt khi AI đã phân tích xong.

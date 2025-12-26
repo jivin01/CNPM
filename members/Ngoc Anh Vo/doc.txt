@@ -15,3 +15,10 @@ Xây dựng Database (PostgreSQL/SQL Server) bằng EF Core.
 
 Code chức năng Đăng ký/Đăng nhập, phân quyền (RBAC) cho 4 nhóm quyền.
 Quản lý hồ sơ y tế cơ bản của bệnh nhân.
+
+Ngọc Anh Võ: Patient Web Interface
+Thư mục: members/Ngọc Anh Võ/
+Cấu trúc nội dung:
+Upload (components/Upload/): Tạo nút chọn ảnh, có thanh kéo thả và hiển thị ảnh xem trước (Preview).
+Dashboard (pages/Dashboard/): Vẽ các biểu đồ cột hoặc tròn hiển thị mức độ nguy cơ (Tim mạch, Tiểu đường) dựa trên dữ liệu AI trả về.
+API Call (services/api.ts): Dùng thư viện Axios để gửi ảnh lên Backend và nhận kết quả về hiển thị.

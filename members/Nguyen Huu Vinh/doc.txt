@@ -1,0 +1,5 @@
+Bác sĩ (pages/Doctor/): Hiển thị danh sách bệnh nhân đang chờ duyệt kết quả. Có nút "Xác nhận" hoặc "Sửa kết quả".
+
+Phòng khám (pages/Clinic/): Trang quản lý tổng, xem hôm nay có bao nhiêu ca chụp, bao nhiêu ca rủi ro cao.
+
+Viewer (components/AnnotationViewer/): Một trình xem ảnh cho phép lồng ghép ảnh gốc và ảnh mạch máu AI đã tách để bác sĩ so sánh.
