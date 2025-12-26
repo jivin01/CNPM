@@ -2,18 +2,18 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session, select
-from typing import List
+from typing import List, Optional
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 
 # --- IMPORT DATABASE & MODELS ---
 from database import create_db_and_tables, get_session, engine 
-# Lưu ý: Import đủ các bảng để SQLModel tạo bảng trong DB
 from models import User, Patient, Appointment, MedicalRecord, Medicine, Prescription, PrescriptionItem, AIDiagnosis
 from schemas import UserCreate, UserOut, UserUpdate
 
-# --- IMPORT MODULE ROUTERS (QUAN TRỌNG) ---
-from routers import pharmacy  # File xử lý thuốc bạn vừa tạo
+# --- IMPORT MODULE ROUTERS ---
+from routers import pharmacy      # Router thuốc (vẫn nằm trong folder routers)
+import billing                    # <--- [ĐÃ SỬA] Import trực tiếp file billing.py cùng cấp
 from patients import router as patients_router
 import appointments 
 import medical_exam 
@@ -47,14 +47,12 @@ def auto_delete_old_appointments():
         except Exception as e:
             print(f"ERROR: Lỗi khi chạy tác vụ tự động xóa: {e}")
 
-# --- LIFESPAN (Khởi động & Tắt app) ---
+# --- LIFESPAN ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # 1. Tạo bảng nếu chưa có
     create_db_and_tables() 
     print("LOG: Đã khởi tạo Database thành công!")
 
-    # 2. Chạy Scheduler xóa lịch cũ
     scheduler = BackgroundScheduler()
     scheduler.add_job(auto_delete_old_appointments, 'cron', hour=0, minute=0)
     scheduler.start()
@@ -65,7 +63,6 @@ async def lifespan(app: FastAPI):
 # --- KHỞI TẠO APP ---
 app = FastAPI(lifespan=lifespan)
 
-# Cấu hình CORS (Cho phép Frontend gọi vào)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -75,30 +72,33 @@ app.add_middleware(
 )
 
 # ==========================================
-# ĐĂNG KÝ ROUTER (GOM CÁC FILE CON LẠI)
+# ĐĂNG KÝ ROUTER
 # ==========================================
 app.include_router(auth_router) 
-app.include_router(pharmacy.router)      # <-- Dòng này đã lo hết phần Thuốc & Kê đơn
+app.include_router(pharmacy.router)
+app.include_router(billing.router)      # Đăng ký router tính tiền
 app.include_router(patients_router)
 app.include_router(appointments.router)
 app.include_router(medical_exam.router)
 app.include_router(ai_router.router)
-
 # ==========================================
 
 @app.get("/")
 def read_root():
     return {"message": "AURA Backend: Hệ thống đang chạy ổn định!"}
 
-# --- PHẦN USER MANAGEMENT ---
-# (Phần này nếu chưa tách ra file riêng thì giữ lại ở đây là đúng)
+# --- USER MANAGEMENT APIs ---
+
 @app.get("/api/profile", response_model=UserOut)
 def get_profile(current_user: User = Depends(get_current_user)):
     return current_user
 
 @app.get("/api/users", response_model=List[UserOut])
-def list_users(session: Session = Depends(get_session), current_user: User = Depends(get_current_user)):
-    return session.exec(select(User)).all()
+def list_users(role: Optional[str] = None, session: Session = Depends(get_session)):
+    statement = select(User)
+    if role:
+        statement = statement.where(User.role == role)
+    return session.exec(statement).all()
 
 @app.post("/api/users", response_model=UserOut)
 def create_user_by_admin(user_input: UserCreate, session: Session = Depends(get_session), admin: User = Depends(require_admin)):
