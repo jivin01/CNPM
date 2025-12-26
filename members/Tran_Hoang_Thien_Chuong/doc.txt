@@ -1,8 +1,9 @@
 git checkout -b tran-hoang-thien-chuong
 
-git add "members/Trần Hoàng Thiên Chương/"
-git commit -m "Trần Hoàng Thiên Chương: update doc"
+git add members/Tran_Hoang_Thien_Chuong/
+git commit -m "Tran Hoang Thien Chuong: update feature & test"
 git push origin tran-hoang-thien-chuong
+
 
 
 

@@ -1,8 +1,9 @@
 git checkout -b nguyen-manh-hung
 
-git add "members/Nguyễn Mạnh Hùng/"
-git commit -m "Nguyễn Mạnh Hùng: update doc"
+git add members/Nguyen_Manh_Hung/
+git commit -m "Nguyen Manh Hung: update feature & test"
 git push origin nguyen-manh-hung
+
 
 
 

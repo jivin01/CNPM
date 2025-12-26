@@ -1,8 +1,9 @@
 git checkout -b vo-quynh
 
-git add "members/Võ Quỳnh/"
-git commit -m "Võ Quỳnh: update doc"
+git add members/Vo_Quynh/
+git commit -m "Vo Quynh: update feature & test"
 git push origin vo-quynh
+
 
 
 

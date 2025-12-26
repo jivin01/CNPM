@@ -1,8 +1,9 @@
 git checkout -b ngoc-anh-vo
 
-git add "members/Ngoc Anh Vo/"
-git commit -m "Ngọc Anh Võ: update doc"
+git add members/Ngoc_Anh_Vo/
+git commit -m "Ngoc Anh Vo: update feature & test"
 git push origin ngoc-anh-vo
+
 
 
 

@@ -2,9 +2,10 @@
 Lệnh đẩy code 
 git checkout -b dao-chi-hieu
 
-git add "members/Đào Chí Hiếu/"
-git commit -m "Đào Chí Hiếu: update doc"
+git add members/Dao_Chi_Hieu/
+git commit -m "Dao Chi Hieu: update feature & test"
 git push origin dao-chi-hieu
+
 
 
 

@@ -1,8 +1,9 @@
 git checkout -b duong-le-son-hao
 
-git add "members/Dương Lê Sơn Hào/"
-git commit -m "Dương Lê Sơn Hào: update doc"
+git add members/Duong_Le_Son_He/
+git commit -m "Duong Le Son Hao: update feature & test"
 git push origin duong-le-son-hao
+
 
 
 Middleware Developer (Cloud & Real-time)
