@@ -1,0 +1,21 @@
+git checkout -b vo-quynh
+
+git add "members/Võ Quỳnh/"
+git commit -m "Võ Quỳnh: update doc"
+git push origin vo-quynh
+
+
+
+Data Engineer (Reporting & Analytics)
+Viết code xuất báo cáo y tế sang PDF chuyên nghiệp (có logo, bảng biểu).
+
+Code các API thống kê dữ liệu lớn cho Admin (số lượng ca bệnh theo vùng, tỷ lệ rủi ro).
+
+Chức năng backup dữ liệu y tế định kỳ.
+
+
+Báo cáo (ReportGenerator/): Dùng thư viện như iTextSharp hoặc QuestPDF để tạo file PDF gồm: Thông tin bệnh nhân + Ảnh võng mạc + Kết luận của bác sĩ.
+
+Thống kê (AnalyticsService/): Viết API tính toán các số liệu tổng quát (Ví dụ: 70% bệnh nhân trong tháng có nguy cơ cao huyết áp).
+
+Xuất dữ liệu: Code nút bấm cho phép tải toàn bộ danh sách bệnh nhân về máy dưới dạng file Excel (.csv).
