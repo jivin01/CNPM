@@ -1,0 +1,14 @@
+# Requirements for Nguyen_Manh_Hung AI Specialist component
+# Install with: pip install -r requirements.txt
+
+fastapi
+uvicorn[standard]
+python-multipart
+pillow
+numpy
+requests
+supabase
+cloudinary
+scikit-image
+scipy
+pytest
