@@ -8,7 +8,10 @@ Requirements:
 - pillow, numpy, fastapi, uvicorn, cloudinary (optional)
 
 Run locally:
-    python -m uvicorn app:app --port 8010
+    uvicorn app:app --port 8010
 
 Notes:
 - Storage upload uses Cloudinary if environment is configured (CLOUDINARY_URL or separate vars).
+
+http://127.0.0.1:8010/docs#/
+http://127.0.0.1:8010/health(status:ok)
