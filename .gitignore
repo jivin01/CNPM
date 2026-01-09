@@ -1,6 +1,29 @@
+# Chặn file hệ thống và thư viện Python
+__pycache__/
+*.py[cod]
 venv/
+.venv/
 Lib/
 site-packages/
-__pycache__/
-*.pyc
 .env
+
+# Chặn file database
+*.db
+*.sqlite3
+
+# Chặn thư viện Node.js (Frontend)
+node_modules/
+dist/
+
+# Chặn cấu hình IDE
+.vs/
+.vscode/
+*.user
+*.sln.docstates
+
+# Khác
+.DS_Store
+build/
+
+**/node_modules/
+**/venv/
