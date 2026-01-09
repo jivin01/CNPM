@@ -1,22 +1,6 @@
-# Chặn file hệ thống và thư viện Python
-__pycache__/
-*.py[cod]
 venv/
+Lib/
+site-packages/
+__pycache__/
+*.pyc
 .env
-
-# Chặn file database (Không up dữ liệu bệnh nhân lên mạng)
-*.db
-*.sqlite3
-
-# Chặn thư viện Node.js (Frontend)
-node_modules/
-dist/
-
-# Chặn cấu hình IDE (Quan trọng để sửa lỗi Permission Denied)
-.vs/
-.vscode/
-*.user
-*.sln.docstates
-
-# Khác
-.DS_Store
