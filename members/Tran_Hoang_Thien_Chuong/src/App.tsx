@@ -1,73 +1,110 @@
-// src/App.tsx
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
+
 import DoctorDashboard from './pages/DoctorDashboard';
 import ClinicManagerDashboard from './pages/ClinicManagerDashboard';
+import PatientDashboard from './pages/PatientDashboard';
+import Upload from './pages/Upload'; 
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-// --- Component Menu bên trái ---
 const Sidebar = () => {
-  const location = useLocation(); // Lấy đường dẫn hiện tại để tô màu menu
-  
-  const menuItems = [
-    { path: '/', label: '👨‍⚕️ Bác sĩ Chẩn đoán' },
-    { path: '/manager', label: '🏥 Quản lý Phòng khám & dịch vụ' },
-    // Đã xóa mục Gói dịch vụ ở đây
-  ];
+  const location = useLocation();
+  const [role, setRole] = useState<string | null>(localStorage.getItem('role'));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const currentRole = localStorage.getItem('role');
+      if (currentRole !== role) setRole(currentRole);
+    }, 500);
+    return () => clearInterval(interval);
+  }, [role]);
+
+  let menuItems: { path: string; label: string; icon: string }[] = [];
+
+  if (role === 'doctor') {
+    menuItems = [
+      { path: '/doctor-dashboard', label: 'Duyệt Bệnh Án', icon: '👨‍⚕️' },
+      
+    ];
+  } else if (role === 'clinic_manager') {
+    menuItems = [
+      { path: '/manager', label: 'Quản Lý Phòng Khám', icon: '🏥' },
+    ];
+  } else {
+    menuItems = [
+      { path: '/upload', label: 'Tải Ảnh Khám', icon: '📸' },
+      { path: '/patients', label: 'Sổ Tay Sức Khỏe', icon: '📊' },
+    ];
+  }
 
   return (
     <div className="w-64 bg-slate-900 text-white min-h-screen flex flex-col shadow-xl">
-      <div className="p-6 border-b border-slate-800">
-        <h1 className="text-2xl font-bold text-blue-400 tracking-wider">AURA AI</h1>
-        <p className="text-xs text-slate-400 mt-1">Hệ thống hỗ trợ chẩn đoán</p>
+      <div className="p-6 border-b border-slate-800 flex items-center gap-3">
+        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold">A</div>
+        <h1 className="text-xl font-bold tracking-wide">AURA AI</h1>
       </div>
-      
-      <nav className="flex-1 p-4 space-y-2">
+      <nav className="flex-1 p-4 space-y-2 mt-2">
         {menuItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
-            className={`flex items-center p-3 rounded-lg transition-all duration-200 ${
-              location.pathname === item.path 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50 translate-x-1' 
-                : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+            className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
+              location.pathname === item.path ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
             }`}
           >
-            <span className="font-medium">{item.label}</span>
+            <span className="text-xl">{item.icon}</span>
+            {item.label}
           </Link>
         ))}
       </nav>
-
       <div className="p-4 border-t border-slate-800">
-        <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center font-bold">D</div>
-            <div>
-                <p className="text-sm font-medium">Dr. User</p>
-                <p className="text-xs text-green-400">● Online</p>
-            </div>
-        </div>
+        <button 
+          onClick={() => { localStorage.clear(); window.location.href = '/login'; }}
+          className="w-full p-2 text-sm text-red-400 hover:bg-red-900/20 rounded-lg transition"
+        >
+          🚪 Đăng xuất
+        </button>
       </div>
     </div>
   );
 };
 
-// --- Component Chính ghép mọi thứ lại ---
-const App: React.FC = () => {
+const MainLayout = () => {
+  const location = useLocation();
+  const role = localStorage.getItem('role');
+  const hideSidebar = ['/login', '/register'].includes(location.pathname);
+
+  const HomeRedirect = () => {
+    if (role === 'doctor') return <Navigate to="/doctor-dashboard" replace />;
+    if (role === 'clinic_manager') return <Navigate to="/manager" replace />;
+    if (role) return <Navigate to="/upload" replace />;
+    return <Navigate to="/login" replace />;
+  };
+
   return (
-    <Router>
-      <div className="flex flex-row min-h-screen bg-gray-50">
-        <Sidebar /> {/* Menu luôn cố định bên trái */}
-        
-        {/* Nội dung bên phải thay đổi theo Route */}
-        <div className="flex-1 h-screen overflow-auto">
-          <Routes>
-            <Route path="/" element={<DoctorDashboard />} />
-            <Route path="/manager" element={<ClinicManagerDashboard />} />
-            {/* Đã xóa Route /billing ở đây */}
-          </Routes>
-        </div>
+    <div className="flex flex-row min-h-screen bg-gray-50">
+      {!hideSidebar && <Sidebar />}
+      <div className="flex-1 h-screen overflow-auto">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+          <Route path="/patients" element={<PatientDashboard />} />
+          <Route path="/upload" element={<Upload />} />
+          <Route path="/manager" element={<ClinicManagerDashboard />} />
+          <Route path="/" element={<HomeRedirect />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
       </div>
-    </Router>
+    </div>
   );
 };
+
+const App: React.FC = () => (
+  <Router>
+    <MainLayout />
+  </Router>
+);
 
 export default App;
